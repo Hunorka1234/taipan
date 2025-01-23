@@ -1,0 +1,62 @@
+from taipan_spine.taipanspine import *
+
+class TaipanCalculator:
+    def __init__(self):
+        # Main layout
+        self.main_layout = spine.kivvy.create_layout('vertical')
+        
+        # Solution display
+        self.solution = spine.kivvy.create_label(text='0')
+        self.solution.background_color = (0.2, 0.6, 0.8, 1)  # Cool blue
+        self.main_layout.add_widget(self.solution)
+        
+        # Button grid
+        self.buttons = [
+            ['7', '8', '9', '/'],
+            ['4', '5', '6', '*'],
+            ['1', '2', '3', '-'],
+            ['.', '0', 'C', '+'],
+            ['=']
+        ]
+        
+        # Create button grid layout
+        button_grid = spine.kivvy.create_grid(cols=4)
+        for row in self.buttons:
+            for label in row:
+                button = spine.kivvy.create_button(
+                    text=label,
+                    on_press=self.on_button_press
+                )
+                button.background_color = (0.3, 0.4, 0.5, 1)  # Slate gray
+                if label == 'C':
+                    button.background_color = (0.8, 0.2, 0.2, 1)  # Red
+                elif label == '=':
+                    button.background_color = (0.2, 0.8, 0.2, 1)  # Green
+                button_grid.add_widget(button)
+        
+        self.main_layout.add_widget(button_grid)
+        self.current = ''
+    
+    def on_button_press(self, instance):
+        button_text = instance.text
+        
+        if button_text == 'C':
+            self.current = ''
+            self.solution.text = '0'
+        elif button_text == '=':
+            try:
+                result = str(eval(self.current))
+                self.solution.text = result
+                self.current = result
+            except:
+                self.solution.text = 'Error'
+                self.current = ''
+        else:
+            self.current += button_text
+            self.solution.text = self.current
+
+# Create and run the calculator app
+app = spine.kivvy.create_app("Taipan Calculator")
+calc = TaipanCalculator()
+app.root = calc.main_layout
+app.run()

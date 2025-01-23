@@ -1,0 +1,9 @@
+from taipan_spine.taipanspine import *
+
+# Get different types of input
+name = userinput.get_text("Enter your name: ")
+age = userinput.get_integer("Enter your age: ")
+height = userinput.get_float("Enter your height in meters: ")
+
+# Display the collected information
+print(f"Hello {name}! You are {age} years old and {height}m tall!")

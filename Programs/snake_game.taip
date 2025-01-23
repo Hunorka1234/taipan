@@ -1,0 +1,162 @@
+from taipan_spine.taipanspine import *
+
+class TaipanSnake:
+    def __init__(self):
+        # Game settings
+        self.GRID_SIZE = 20
+        self.CELL_SIZE = 30
+        self.WINDOW_WIDTH = self.GRID_SIZE * self.CELL_SIZE
+        self.WINDOW_HEIGHT = self.GRID_SIZE * self.CELL_SIZE + 100
+        
+        spine.kivvy.Window.size = (self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
+        
+        self.snake_positions = [(5, 5)]
+        self.food_position = self.generate_food()
+        self.direction = 'right'
+        self.game_over = False
+        
+        # UI Setup
+        self.main_layout = spine.kivvy.BoxLayout(orientation='vertical')
+        self.score_layout = spine.kivvy.BoxLayout(orientation='horizontal')
+        self.score_label = spine.kivvy.Label(text='Score: 0')
+        self.score_layout.add_widget(self.score_label)
+        self.main_layout.add_widget(self.score_layout)
+        
+        self.game_widget = spine.kivvy.Widget()
+        self.game_widget.bind(size=self._update_canvas)
+        self.game_widget.bind(pos=self._update_canvas)
+        
+        self.restart_button = spine.kivvy.Button(text='Restart')
+        self.restart_button.bind(on_press=self.restart_game)
+        self.restart_button.opacity = 0
+        
+        self.main_layout.add_widget(self.game_widget)
+        self.main_layout.add_widget(self.restart_button)
+        
+        # Controls
+        self.game_widget.bind(on_touch_down=self._ignore_touch)
+        self._keyboard = spine.kivvy.Window.request_keyboard(self._on_keyboard_closed, self.game_widget)
+        self._keyboard.bind(on_key_down=self._on_key_down)
+        
+        # Start game loop
+        spine.kivvy.Clock.schedule_interval(self.update, 0.15)
+
+    def _ignore_touch(self, instance, touch):
+        return True
+        
+    def restart_game(self, instance):
+        if not self.game_over:
+            return
+        self.snake_positions = [(5, 5)]
+        self.direction = 'right'
+        self.food_position = self.generate_food()
+        self.game_over = False
+        self.score_label.text = 'Score: 0'
+        self.restart_button.opacity = 0
+        
+    def generate_food(self):
+        while True:
+            x = spine.random.randint(0, self.GRID_SIZE - 1)
+            y = spine.random.randint(0, self.GRID_SIZE - 1)
+            if not any(abs(x - sx) < 1 and abs(y - sy) < 1 for sx, sy in self.snake_positions):
+                return (x, y)
+    
+    def _update_canvas(self, instance, value):
+        self.pos = instance.pos
+        self.size = instance.size
+        
+        cell_width = self.size[0] / self.GRID_SIZE
+        cell_height = self.size[1] / self.GRID_SIZE
+        
+        self.game_widget.canvas.clear()
+        with self.game_widget.canvas:
+            # Game border - white outline
+            spine.kivvy.Color(1, 1, 1, 1)
+            spine.kivvy.Rectangle(pos=self.pos, size=self.size)
+            
+            # Game background - black
+            spine.kivvy.Color(0, 0, 0, 1)
+            spine.kivvy.Rectangle(
+                pos=(self.pos[0] + 2, self.pos[1] + 2),
+                size=(self.size[0] - 4, self.size[1] - 4)
+            )
+            
+            # Draw snake
+            for i, (x, y) in enumerate(self.snake_positions):
+                if i == 0:  # Head - darker green
+                    spine.kivvy.Color(0, 0.5, 0, 1)
+                else:  # Body - lighter green
+                    spine.kivvy.Color(0, 0.8, 0, 1)
+                
+                spine.kivvy.Rectangle(
+                    pos=(self.pos[0] + x * cell_width + 1,
+                         self.pos[1] + y * cell_height + 1),
+                    size=(cell_width - 2, cell_height - 2)
+                )
+            
+            # Draw food - red cube
+            spine.kivvy.Color(1, 0, 0, 1)
+            spine.kivvy.Rectangle(
+                pos=(self.pos[0] + self.food_position[0] * cell_width + 1,
+                     self.pos[1] + self.food_position[1] * cell_height + 1),
+                size=(cell_width - 2, cell_height - 2)
+            )
+    
+    def _on_keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self._on_key_down)
+        self._keyboard = None
+    
+    def _on_key_down(self, keyboard, keycode, text, modifiers):
+        if self.game_over:
+            return
+        
+        if keycode[1] in ['up', 'w'] and self.direction != 'down':
+            self.direction = 'up'
+        elif keycode[1] in ['down', 's'] and self.direction != 'up':
+            self.direction = 'down'
+        elif keycode[1] in ['left', 'a'] and self.direction != 'right':
+            self.direction = 'left'
+        elif keycode[1] in ['right', 'd'] and self.direction != 'left':
+            self.direction = 'right'
+    
+    def check_collision(self, x, y):
+        if x < 0 or x >= self.GRID_SIZE or y < 0 or y >= self.GRID_SIZE:
+            return True
+        return any(abs(x - sx) < 0.8 and abs(y - sy) < 0.8 for sx, sy in self.snake_positions[1:])
+
+    def update(self, dt):
+        if self.game_over:
+            return
+        
+        x, y = self.snake_positions[0]
+        
+        if self.direction == 'up':
+            y += 1
+        elif self.direction == 'down':
+            y -= 1
+        elif self.direction == 'left':
+            x -= 1
+        elif self.direction == 'right':
+            x += 1
+        
+        if self.check_collision(x, y):
+            self.game_over = True
+            self.score_label.text = f'Game Over! Final Score: {len(self.snake_positions) - 1}'
+            self.restart_button.opacity = 1
+            return
+        
+        self.snake_positions.insert(0, (x, y))
+        
+        if abs(x - self.food_position[0]) < 0.8 and abs(y - self.food_position[1]) < 0.8:
+            self.food_position = self.generate_food()
+            self.score_label.text = f'Score: {len(self.snake_positions) - 1}'
+        else:
+            self.snake_positions.pop()
+        
+        self._update_canvas(self.game_widget, None)
+
+# Create and run the game
+app = spine.kivvy.App()
+game = TaipanSnake()
+app.root = game.main_layout
+app.run()

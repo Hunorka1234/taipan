@@ -1,0 +1,21 @@
+from taipan_spine.taipanspine import *
+
+class TestGUI:
+    def __init__(self):
+        self.layout = spine.kivvy.create_layout()
+        self.input = spine.kivvy.create_input()
+        self.label = spine.kivvy.create_label("Welcome to Taipan GUI!")
+        self.button = spine.kivvy.create_button("Click Me!", self.on_button_press)
+        
+        self.layout.add_widget(self.label)
+        self.layout.add_widget(self.input)
+        self.layout.add_widget(self.button)
+    
+    def on_button_press(self, instance):
+        self.label.text = f"You typed: {self.input.text}"
+
+# Create and run the app
+app = spine.kivvy.create_app("Taipan GUI Test")
+gui = TestGUI()
+app.root = gui.layout
+app.run()

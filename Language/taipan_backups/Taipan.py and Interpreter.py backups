@@ -1,0 +1,47 @@
+#taipan.py (old)
+#!/usr/bin/env python3
+import sys
+import os
+
+# Add the project root to Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+
+from taipan_interpreter.taipan_interpreter import TaipanInterpreter
+
+def main():
+    print("Taipan starting...")
+    if len(sys.argv) != 2:
+        print("Usage: taipan <filename.taip>")
+        sys.exit(1)
+    
+    interpreter = TaipanInterpreter()
+    interpreter.execute(sys.argv[1])
+
+if __name__ == "__main__":
+    main()
+    
+    
+    
+    
+    
+#taipan_interpreter.py (old)
+from taipan_spine.taipanspine import spine
+
+class TaipanInterpreter:
+    def __init__(self):
+        self.spine = spine
+        print("Taipan Interpreter initialized!")
+    
+    def execute(self, filepath):
+        print(f"Executing file: {filepath}")
+        with open(filepath, 'r') as file:
+            content = file.read()
+        print(f"File contents:\n{content}")
+        
+        try:
+            # Direct execution for now
+            exec(content)
+        except Exception as e:
+            print(f"Taipan Error: {str(e)}")
+
+    

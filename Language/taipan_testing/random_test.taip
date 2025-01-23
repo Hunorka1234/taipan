@@ -1,0 +1,26 @@
+from taipan_spine.taipanspine import *
+
+# Generate random integer between 1 and 10
+number = random.randint(1, 10)
+print("Random integer:", number)
+
+# Generate random float between 0 and 1
+float_num = random.random_float()
+print("Random float:", float_num)
+
+# Choose random item from list
+items = ['apple', 'banana', 'orange']
+chosen = random.choice(items)
+print("Random choice:", chosen)
+
+# Shuffle a sequence
+shuffled = random.shuffle(items)
+print("Shuffled list:", shuffled)
+
+# Get random number in range with step
+stepped = random.random_range(0, 100, 5)
+print("Random range:", stepped)
+
+# Get random sample from sequence
+sample = random.random_sample(items, 2)
+print("Random sample:", sample)

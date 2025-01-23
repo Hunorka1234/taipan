@@ -1,0 +1,27 @@
+from taipan_spine.taipanspine import *
+
+# If-else example
+logicops.if_statement(
+    5 > 3,
+    lambda: print("5 is greater than 3"),
+    lambda: print("This won't print")
+)
+
+# While loop example with proper variable scope
+counter = 0  # Define in global scope
+def while_body():
+    global counter
+    print(f"Count: {counter}")
+    counter += 1
+
+logicops.while_loop(
+    lambda: counter < 3,
+    while_body
+)
+
+# For loop example
+numbers = [1, 2, 3]
+logicops.for_loop(
+    numbers,
+    lambda x: print(f"Number: {x}")
+)

@@ -1,0 +1,15 @@
+from taipan_spine.taipanspine import *
+
+a = 100
+b = 5
+
+# Using math operations through spine
+result_add = spine.get_function('add')(a, b)
+result_sub = spine.get_function('subtract')(a, b)
+result_mul = spine.get_function('multiply')(a, b)
+result_div = spine.get_function('division')(a, b)
+
+print("Addition:", result_add)
+print("Subtraction:", result_sub)
+print("Multiplication:", result_mul)
+print("Division:", result_div)
