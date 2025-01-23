@@ -38,15 +38,15 @@ To set up Taipan on your machine or as a developer, follow these steps:
 If you're setting this up from a GitHub repository:
 
 ```bash
-git clone https://github.com/yourusername/taipan.git
+git clone https://github.com/Hunorka1234/taipan.git
 cd taipan
 ```
 
 ### 2. **Install Dependencies (if any)**
 
-Taipan is based on Python 3, so ensure Python is installed. You might also need to install dependencies if there are any (this example doesn't have any external dependencies yet).
+Taipan is based on Python 3, so ensure Python is installed. You might also need to install dependencies if there are any, this does it auto;
 
-```bash
+```
 pip3 install -r requirements.txt
 ```
 
@@ -60,15 +60,7 @@ pip3 install -e .
 
 This will install the package in **editable mode**, meaning changes you make to the source code will automatically reflect in the installed version.
 
-### 4. **Create a Symlink (Optional)**
-
-To easily run Taipan from anywhere, create a symlink to the `taipan.py` script in `/usr/local/bin`:
-
-```bash
-sudo ln -s /path/to/taipan/Language/taipan_framework/taipan.py /usr/local/bin/taipan
-```
-
-This allows you to run the `taipan` command from the terminal.
+This allows you to run the `taipan` command from the terminal, as the installed taipan-language is now a python package. use the flag  --break-system-packages if you dont wish to use a python-venv. 
 
 ---
 
@@ -134,60 +126,6 @@ from taipan_tails.modules.multiply import multiply
 
 ---
 
-## Directory Structure
-
-Here’s a detailed overview of the Taipan directory structure:
-
-```
-TAIPAN/
-├── Language/
-│   ├── setup.py                # Setup file for package installation
-│   ├── taipan.egg-info/        # Metadata for the Python package
-│   ├── taipan_framework/       # Core interpreter and logic
-│   │   ├── taipan.py           # Main entry point to run Taipan code
-│   ├── taipan_spine/           # Central hub to load modules
-│   │   └── taipanspine.py      # Imports all available functions from tails
-│   ├── taipan_tails/           # Directory containing all tail modules
-│   │   ├── modules/            # Function modules (e.g., math_ops.py)
-│   └── taipan_testing/         # Test scripts
-│       └── test.taip           # Example test file
-└── requirements.txt            # Any necessary dependencies
-```
-
-### Key Files:
-- **`taipan.py`**: The main script for running Taipan code.
-- **`taipanspine.py`**: The central hub that dynamically imports and manages available modules.
-- **`math_ops.py`**: Example tail module with functions like `add`, `subtract`, etc.
-- **`test.taip`**: Example test script showing how to use Taipan.
-
----
-
-## Publishing to GitHub (User Guide)
-
-Once you've set everything up, you can publish this project to GitHub. Here’s what users need to do to get started:
-
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/yourusername/taipan.git
-   cd taipan
-   ```
-
-2. **Install Taipan:**
-   ```bash
-   pip3 install -e .
-   ```
-
-3. **Run a Taipan Script:**
-   Users can now run any `.taip` script using the `taipan` command:
-   ```bash
-   taipan path/to/script.taip
-   ```
-
-4. **Create and Modify Tails:**
-   To add functionality, users can create new tails in the `taipan_tails/modules` directory. Each file in that folder is a module that can be accessed by the `taipan_spine`.
-
----
-
 ## Notes for Future Development
 
 - **Modularization**: Continue expanding the `taipan_tails` directory with more function modules.
@@ -196,3 +134,5 @@ Once you've set everything up, you can publish this project to GitHub. Here’s 
 - **User Guide**: Enhance the guide as the language grows with new features.
 
 ---
+
+commit by opening a pull request, or message me at: hunoramester@gmail.com
