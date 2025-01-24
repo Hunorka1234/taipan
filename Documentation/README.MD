@@ -125,14 +125,4 @@ from taipan_tails.modules.multiply import multiply
 ```
 
 ---
-
-## Notes for Future Development
-
-- **Modularization**: Continue expanding the `taipan_tails` directory with more function modules.
-- **Error Handling**: Implement robust error handling and debugging support in the interpreter.
-- **Performance**: Optimize the module loading mechanism if necessary.
-- **User Guide**: Enhance the guide as the language grows with new features.
-
----
-
 commit by opening a pull request, or message me at: hunoramester@gmail.com
